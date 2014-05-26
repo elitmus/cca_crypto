@@ -75,8 +75,8 @@ module CCAvenue
         # "#{submit_url}?command=#{command}&encRequest=#{encrypted_data}&access_code=#{access_code}"
 
         def self.encrypt(plain_text, key)
-            secret_key =  [Digest::MD5.hexdigest(key)].pack("H*") 
-            cipher = OpenSSL::Cipher::Cipher.new('aes-128-cbc')
+            secret_key =  Digest::MD5.digest(key)
+            cipher = cipher = OpenSSL::Cipher::AES.new(128, :CBC)
             cipher.encrypt
             cipher.key = secret_key
             cipher.iv  = INIT_VECTOR
@@ -132,9 +132,9 @@ module CCAvenue
         #
     
         def self.decrypt(cipher_text, key)
-            secret_key =  [Digest::MD5.hexdigest(key)].pack("H*")
+            secret_key =  Digest::MD5.digest(key)
             encrypted_text = [cipher_text].pack("H*")
-            decipher = OpenSSL::Cipher::Cipher.new('aes-128-cbc')
+            decipher = cipher = OpenSSL::Cipher::AES.new(128, :CBC)
             decipher.decrypt
             decipher.key = secret_key
             decipher.iv  = INIT_VECTOR
